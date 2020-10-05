@@ -1,15 +1,33 @@
-## Put comments here that give an overall description of what your
-## functions do
+## In order to avoid computing time for demanding process like inverting a matrix
+## this function caches its parameters by taking advantage of **Scoping Rules** concept.
 
-## Write a short comment describing this function
+## Function that cache the function parameter, in this case the parameter will be a matrix
 
 makeCacheMatrix <- function(x = matrix()) {
-
+        m <- NULL
+            set <- function(y) {
+                    x <<- y
+                    m <<- NULL
+            }
+            get <- function() x
+            setinverse <- function(inverse) m <<- inverse
+            getinverse <- function() m
+            list(set = set, get = get,
+                 setinverse = setinverse,
+                 getinverse = getinverse)
 }
 
 
-## Write a short comment describing this function
+## solve generic function is used in order to inverse a matrix
 
 cacheSolve <- function(x, ...) {
-        ## Return a matrix that is the inverse of 'x'
+        m <- x$getinverse()
+        if(!is.null(m)) {
+                    message("getting cached matrix")
+                    return(m)
+        }
+        data <- x$get()
+        m <- solve(data, ...)
+        x$setinverse(m)
+        m
 }
